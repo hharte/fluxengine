@@ -1,4 +1,8 @@
 syntax = "proto2";
 
-message MicropolisDecoderProto {}
+import "lib/common.proto";
 
+message MicropolisDecoderProto {
+	optional bool ignore_track_byte = 1    [default = false, (help) = "ignore track byte in sector header"];
+    optional bool mzos_checksum = 2        [default = false, (help) = "Use MZOS checksum instead of MDOS, CP/M checksum."];
+}

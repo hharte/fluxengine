@@ -29,6 +29,9 @@ std::unique_ptr<ImageWriter> ImageWriter::create(const ImageWriterProto& config)
 		case ImageWriterProto::kNsi:
 			return ImageWriter::createNsiImageWriter(config);
 
+		case ImageWriterProto::kVgi:
+			return ImageWriter::createVgiImageWriter(config);
+
 		default:
 			Error() << "bad output image config";
 			return std::unique_ptr<ImageWriter>();
@@ -47,6 +50,7 @@ void ImageWriter::updateConfigForFilename(ImageWriterProto* proto, const std::st
 		{".ldbs",     [&]() { proto->mutable_ldbs(); }},
 		{".st",       [&]() { proto->mutable_img(); }},
 		{".nsi",      [&]() { proto->mutable_nsi(); }},
+		{".vgi",      [&]() { proto->mutable_vgi(); }},		
 	};
 
 	for (const auto& it : formats)

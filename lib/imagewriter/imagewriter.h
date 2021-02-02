@@ -24,6 +24,8 @@ public:
 		const ImageWriterProto& config);
     static std::unique_ptr<ImageWriter> createNsiImageWriter(
 		const ImageWriterProto& config);
+    static std::unique_ptr<ImageWriter> createVgiImageWriter(
+		const ImageWriterProto& config);
 
 public:
 	void printMap(const SectorSet& sectors);

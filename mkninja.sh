@@ -352,6 +352,7 @@ buildlibrary libbackend.a \
     lib/imagewriter/imgimagewriter.cc \
     lib/imagewriter/ldbsimagewriter.cc \
     lib/imagewriter/nsiimagewriter.cc \
+    lib/imagewriter/vgiimagewriter.cc \
     lib/ldbs.cc \
     lib/proto.cc \
     lib/reader.cc \
@@ -383,6 +384,7 @@ READABLES="\
     ibm \
     macintosh \
     micropolis \
+    micropolis_vgi \
     mx \
     northstar \
     tids990 \
