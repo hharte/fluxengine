@@ -7,8 +7,8 @@
 #include "../protocol.h"
 
 #define MOTOR_ON_TIME 5000 /* milliseconds */
-#define STEP_INTERVAL_TIME 6 /* ms */
-#define STEP_SETTLING_TIME 50 /* ms */
+#define STEP_INTERVAL_TIME_DEFAULT 6 /* ms */
+#define STEP_SETTLING_TIME_DEFAULT 50 /* ms */
 
 #define DISKSTATUS_WPT    1
 #define DISKSTATUS_DSKCHG 2
@@ -30,6 +30,8 @@ static bool motor_on = false;
 static uint32_t motor_on_time = 0;
 static bool homed = false;
 static int current_track = 0;
+static uint8_t step_interval_time = STEP_INTERVAL_TIME_DEFAULT;
+static uint8_t step_settling_time = STEP_SETTLING_TIME_DEFAULT;
 static struct set_drive_frame current_drive_flags;
 
 #define BUFFER_COUNT 64 /* the maximum */
@@ -232,7 +234,7 @@ static void step(int dir)
     STEP_REG_Write(dir | 2); /* step low */
     CyDelayUs(6);
     STEP_REG_Write(dir); /* step high again, drive moves now */
-    CyDelay(STEP_INTERVAL_TIME);
+    CyDelay(step_interval_time);
 }
 
 /* returns true if it looks like a drive is attached */
@@ -245,6 +247,7 @@ static bool home(void)
         if (TRACK0_REG_Read())
             return true;
         step(STEP_TOWARDS0);
+        CyWdtClear();
     }
     
     return false;
@@ -281,7 +284,8 @@ static void seek_to(int track)
         }
         CyWdtClear();
     }
-    CyDelay(STEP_SETTLING_TIME);
+    CyDelay(step_settling_time);
+
     TK43_REG_Write(track < 43); /* high if 0..42, low if 43 or up */
     print("finished seek");
 }
@@ -723,7 +727,8 @@ static void cmd_set_drive(struct set_drive_frame* f)
     if (drive1_present && !drive0_present)
         f->drive = 1;
     set_drive_flags(f);
-    
+    step_interval_time = f->step_interval_time;
+    step_settling_time = f->step_settling_time;
     DECLARE_REPLY_FRAME(struct any_frame, F_FRAME_SET_DRIVE_REPLY);
     send_reply((struct any_frame*) &r);
 }

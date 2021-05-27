@@ -14,7 +14,8 @@ public:
     {
         int rotationalSpeedMs;
         int retries = 5;
-        usbSetDrive(_config.drive(), _config.high_density(), _config.index_mode());
+        usbSetDrive(_config.drive(), _config.high_density(), _config.index_mode(),
+            _config.step_interval_ms(), _config.step_settling_ms());
         std::cout << "Measuring rotational speed... " << std::flush;
  
         do {
@@ -42,7 +43,8 @@ public:
 public:
     std::unique_ptr<Fluxmap> readFlux(int track, int side)
     {
-        usbSetDrive(_config.drive(), _config.high_density(), _config.index_mode());
+        usbSetDrive(_config.drive(), _config.high_density(), _config.index_mode(),
+            _config.step_interval_ms(), _config.step_settling_ms());
         usbSeek(track);
 
         Bytes data = usbRead(

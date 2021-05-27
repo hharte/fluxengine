@@ -31,7 +31,8 @@ int mainSeek(int argc, const char* argv[])
 	if (!config.input().flux().has_drive())
 		Error() << "this only makes sense with a real disk drive";
 
-    usbSetDrive(config.input().flux().drive().drive(), false, config.input().flux().drive().index_mode());
+    usbSetDrive(config.input().flux().drive().drive(), false, config.input().flux().drive().index_mode(),
+        config.input().flux().drive().step_interval_ms(), config.input().flux().drive().step_settling_ms());
 	usbSeek(cylinder);
     return 0;
 }

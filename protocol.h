@@ -168,6 +168,8 @@ struct set_drive_frame
     uint8_t drive;
     uint8_t high_density;
     uint8_t index_mode;
+    uint8_t step_interval_time;
+    uint8_t step_settling_time;
 };
 
 struct voltages

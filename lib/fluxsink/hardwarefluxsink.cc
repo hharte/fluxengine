@@ -16,7 +16,8 @@ public:
 		{
 			int rotationalSpeedMs;
 			int retries = 5;
-			usbSetDrive(_config.drive(), _config.high_density(), _config.index_mode());
+            usbSetDrive(_config.drive(), _config.high_density(), _config.index_mode(),
+                _config.step_interval_ms(), _config.step_settling_ms());
 			std::cout << "Measuring rotational speed... " << std::flush;
 
 			do {
@@ -42,7 +43,8 @@ public:
 public:
     void writeFlux(int track, int side, Fluxmap& fluxmap)
     {
-        usbSetDrive(_config.drive(), _config.high_density(), _config.index_mode());
+		usbSetDrive(_config.drive(), _config.high_density(), _config.index_mode(),
+            _config.step_interval_ms(), _config.step_settling_ms());
 		#if 0
 		if (fluxSourceSinkFortyTrack)
 		{

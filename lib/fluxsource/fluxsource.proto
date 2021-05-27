@@ -10,6 +10,8 @@ message HardwareFluxSourceProto {
 	optional IndexMode index_mode = 4    [default = INDEXMODE_DRIVE, (help) = "index pulse source"];
 	optional int32 hard_sector_count = 5 [default = 0, (help) = "number of hard sectors on disk"];
 	optional bool high_density = 6       [default = true, (help) = "set if this is a high density disk"];
+	optional int32 step_interval_ms = 7  [default = 6, (help) = "head step interval time (ms)"];
+	optional int32 step_settling_ms = 9  [default = 50, (help) = "head step settling time (ms)"];
 }
 
 message TestPatternFluxSourceProto {

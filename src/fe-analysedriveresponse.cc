@@ -211,7 +211,10 @@ int mainAnalyseDriveResponse(int argc, const char* argv[])
 
     usbSetDrive(config.output().flux().drive().drive(),
 		config.output().flux().drive().high_density(),
-		config.output().flux().drive().index_mode());
+		config.output().flux().drive().index_mode(),
+		config.output().flux().drive().step_interval_ms(),
+		config.output().flux().drive().step_settling_ms());
+
 	usbSeek(destCylinder);
 
 	std::cout << "Measuring rotational speed...\n";
