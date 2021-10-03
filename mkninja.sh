@@ -519,6 +519,7 @@ FORMATS="\
     mac400 \
     mac800 \
     micropolis \
+    micropolis275 \
     mx \
     n88basic \
     northstar175 \
