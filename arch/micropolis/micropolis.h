@@ -1,6 +1,7 @@
 #ifndef MICROPOLIS_H
 #define MICROPOLIS_H
 
+#define MICROPOLIS_SECTORS_PER_TRACK 16
 #define MICROPOLIS_ENCODED_SECTOR_SIZE (1+2+266+6)
 
 class AbstractDecoder;

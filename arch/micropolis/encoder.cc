@@ -76,7 +76,7 @@ public:
 
 		if ((physicalTrack >= 0) && (physicalTrack < 77))
 		{
-			for (int sectorId = 0; sectorId < 16; sectorId++)
+			for (int sectorId = 0; sectorId < MICROPOLIS_SECTORS_PER_TRACK; sectorId++)
 			{
 				const auto& sector = image.get(physicalTrack, physicalSide, sectorId);
 				if (sector)
