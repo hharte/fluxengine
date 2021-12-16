@@ -161,6 +161,13 @@ public:
 			Error() << "Sector output size may only be 256 or 275";
 		_sector->status = (wantChecksum == gotChecksum) ? Sector::OK : Sector::BAD_CHECKSUM;
 	}
+
+	std::set<unsigned> requiredSectors(unsigned cylinder, unsigned head) const override
+	{
+		static std::set<unsigned> sectors = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+		return sectors;
+	}
+
 private:
 	const MicropolisDecoderProto& _config;
 	/* -2 for unsynced. -1 for synced, but in middle of first half of last
@@ -172,4 +179,3 @@ std::unique_ptr<AbstractDecoder> createMicropolisDecoder(const DecoderProto& con
 {
 	return std::unique_ptr<AbstractDecoder>(new MicropolisDecoder(config));
 }
-
