@@ -8,8 +8,13 @@
 #include "fmt/format.h"
 #include "lib/decoders/decoders.pb.h"
 
-/* The sector has a preamble of MFM 0x00s and uses 0xFF as a sync pattern. */
-static const FluxPattern SECTOR_SYNC_PATTERN(32, 0xaaaa5555);
+/* The sector has a preamble of MFM 0x00s and uses 0xFF as a sync pattern.
+ *
+ * 00        00        00        F         F
+ * 0000 0000 0000 0000 0000 0000 0101 0101 0101 0101
+ * A    A    A    A    A    A    5    5    5    5
+ */
+static const FluxPattern SECTOR_SYNC_PATTERN(64, 0xAAAAAAAAAAAA5555LL);
 
 /* Adds all bytes, with carry. */
 uint8_t micropolisChecksum(const Bytes& bytes) {
@@ -101,8 +106,10 @@ public:
 			_hardSectorId %= MICROPOLIS_SECTORS_PER_TRACK;
 		}
 
+		_fmr->seek(_fmr->tell().ns() + 500 * 1000); // seek 500uS past the sector pulse.
 		const FluxMatcher* matcher = nullptr;
 		_sector->clock = _fmr->seekToPattern(SECTOR_SYNC_PATTERN, matcher);
+
 		/* Preamble is expected to be 1.280 ms. If a "sync" is found after
 		 * 3.7 ms, then the "data" would overlap the next sector pulse causing
 		 * that next sector to be skipped. Use 3 ms as the limit. */
@@ -112,6 +119,7 @@ public:
 			_fmr->seek(resetPos);
 			return UNKNOWN_RECORD;
 		}
+
 		if (matcher == &SECTOR_SYNC_PATTERN)
 		{
 			return SECTOR_RECORD;
@@ -121,7 +129,7 @@ public:
 
 	void decodeSectorRecord()
 	{
-		readRawBits(16);
+		readRawBits(48);
 		auto rawbits = readRawBits(MICROPOLIS_ENCODED_SECTOR_SIZE*16);
 		auto bytes = decodeFmMfm(rawbits).slice(0, MICROPOLIS_ENCODED_SECTOR_SIZE);
 		ByteReader br(bytes);
@@ -132,6 +140,8 @@ public:
 		if (sector > 15)
 			return;
 		if (track > 77)
+			return;
+		if (sector != _hardSectorId)
 			return;
 
 		br.read(10);  /* OS data or padding */
