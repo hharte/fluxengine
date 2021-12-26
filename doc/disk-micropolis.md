@@ -55,6 +55,18 @@ twice the number of tracks, HCS; the second side's tracks in opposite order
 logically followed the first side (e.g., tracks 77-153). Micropolis disks
 tended to be the latter.
 
+While most operating systems use the standard Micropolis checksum, Vector
+Graphic MZOS uses a unique checksum.  The decoder will automatically detect
+the checksum type in use; however, a specific checksum type may be forced
+using the `--decoder.micropolis.checksum_type=n` where the type is one of:
+
+| Type | Description                             |
+|------|-----------------------------------------|
+| 0    | Automatically detect                    |
+| 1    | Standard Micropolis (MDOS, CP/M, OASIS) |
+| 2    | Vector Graphic MZOS                     |
+
+
 Writing disks
 -------------
 
