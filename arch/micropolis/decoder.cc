@@ -116,6 +116,24 @@ public:
 		_fmr->seekToIndexMark();
 		auto nextIndexMark = _fmr->tell();
 		_fmr->seek(sectorPos);
+
+		/* If the gap between sectors is too large, re-sync the _hardSectorId.
+		 * This can happen when reprocessing flux files that contain retries.
+		 */
+		if (nextIndexMark.ns() - sectorPos.ns() > 12.5e6) {
+			beginTrack();
+
+			_fmr->seekToIndexMark();
+			if (_hardSectorId == -1)
+				_fmr->seekToIndexMark();
+
+			sectorPos = _fmr->tell();
+			resetPos = sectorPos;
+			_fmr->seekToIndexMark();
+			nextIndexMark = _fmr->tell();
+			_fmr->seek(sectorPos);
+		}
+
 		if (nextIndexMark.ns() - sectorPos.ns() < 9e6)
 		{
 			_hardSectorId = MICROPOLIS_SECTORS_PER_TRACK - 1;
