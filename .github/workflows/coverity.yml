@@ -1,0 +1,20 @@
+name: Coverity Scan
+
+# We only want to test official release code, not every pull request.
+on:
+  push:
+    branches: [coverity]
+
+jobs:
+  coverity:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+    - name: apt
+      run: sudo apt update && sudo apt install libudev-dev libsqlite3-dev ninja-build protobuf-compiler libwxgtk3.0-gtk3-dev
+    - uses: vapier/coverity-scan-action@v1
+      with:
+        email: ${{ secrets.COVERITY_SCAN_EMAIL }}
+        token: ${{ secrets.COVERITY_SCAN_TOKEN }}
